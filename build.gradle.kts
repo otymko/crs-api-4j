@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.github.otymko.bsl"
-version = "0.1-SNAPSHOT"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
