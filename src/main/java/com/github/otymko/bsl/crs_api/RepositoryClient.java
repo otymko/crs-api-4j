@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * Клиент хранилища конфигурации
  */
 public class RepositoryClient {
-  private static final String DEFAULT_REPOSITORY_NAME = "maincr";
+  public static final String DEFAULT_REPOSITORY_NAME = "maincr";
   /**
    * Адрес сервера хранилища конфигураций. Например:
    * http://localhost/repo.1ccr

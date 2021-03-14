@@ -51,4 +51,5 @@ license {
     ext["project"] = "CRS-API for java"
     strictCheck = true
     mapping("java", "SLASHSTAR_STYLE")
+    exclude("**/*.txt")
 }

@@ -19,6 +19,7 @@
 package com.github.otymko.bsl.crs_api;
 
 import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
@@ -29,11 +30,23 @@ class RepositoryClientTest {
   private static final String URL = "http://localhost:5000/repo/repo.1ccr";
   private static final String PLATFORM_VERSION = "8.3.12.1855";
   private static final String REPO_USER = "Администратор";
+  private static final String REPO_PASSWORD = "1";
+
+  @BeforeAll
+  public static void setup() {
+    try {
+      RepositoryManager.createDepot(URL, RepositoryClient.DEFAULT_REPOSITORY_NAME, PLATFORM_VERSION, REPO_USER,
+        REPO_PASSWORD);
+    } catch (RepositoryClientException exception) {
+      // игнорируем. пока нет возможности проверить существование репозитория
+    }
+
+  }
 
   @Test
   void testConnection() {
     // give
-    var password = "1";
+    var password = REPO_PASSWORD;
 
     //when
     var client = getClient();
@@ -55,11 +68,10 @@ class RepositoryClientTest {
   void testErrorConnection() {
     // give
     var url = "http://localhost:5001/repo/repo.1ccr";
-    var password = "1";
 
     //when
     var client = getClient(url);
-    var connectionEstablished = isConnectionEstablished(client, password);
+    var connectionEstablished = isConnectionEstablished(client, REPO_PASSWORD);
 
     // then
     assertThat(connectionEstablished).isFalse();
@@ -69,14 +81,13 @@ class RepositoryClientTest {
   @Test
   void testCreateUser() {
     // give
-    var password = "1";
     var user = "user_" + UUID.randomUUID().toString();
     var userPassword = "1";
     var role = "1";
 
     // when
     var client = getClient();
-    client.connect(REPO_USER, password);
+    client.connect(REPO_USER, REPO_PASSWORD);
 
     boolean userIsCreated;
     try {
@@ -105,12 +116,11 @@ class RepositoryClientTest {
   @Test
   void testGetUser() {
     // give
-    var password = "1";
     var user = REPO_USER + "1";
 
     // when
     var client = getClient();
-    client.connect(REPO_USER, password);
+    client.connect(REPO_USER, REPO_PASSWORD);
 
     RepositoryUser repositoryUser;
     try {
@@ -118,26 +128,28 @@ class RepositoryClientTest {
     } catch (RepositoryClientException exception) {
       repositoryUser = null;
     }
+
+    // then
     assertThat(repositoryUser).isNotNull();
     assertThat(repositoryUser.getName()).hasToString(REPO_USER);
 
+    // when
     try {
       repositoryUser = client.getUser(user);
     } catch (RepositoryClientException exception) {
       repositoryUser = null;
     }
+
+    // then
     assertThat(repositoryUser).isNull();
   }
 
   @SneakyThrows
   @Test
   void testGetUsers() {
-    // give
-    var password = "1";
-
     // when
     var client = getClient();
-    client.connect(REPO_USER, password);
+    client.connect(REPO_USER, REPO_PASSWORD);
     var repositoryUsers = client.getUsers();
 
     // then

@@ -20,11 +20,34 @@ package com.github.otymko.bsl.crs_api.util;
 
 import lombok.experimental.UtilityClass;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 // FIXME: переделать на правильное создание xml сообщений к релизу 0.3.0
 @UtilityClass
 public class RequestBodyHelper {
+  public final String TEMPLATE_CREATE_DEPOT = getTemplateCreateDepot();
+  private final String TEMPLATE_ROOT_ID = "c9dd0f2c-4ed0-484a-baad-56494aa67301";
+
+  public String createDevDepot(String repository, String platformVersion, String user, String hash, String template) {
+    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+      "<crs:call xmlns:crs=\"http://v8.1c.ru/8.2/crs\" alias=\"" + repository + "\" name=\"DevDepotAdmin_createDevDepot\" version=\"" + platformVersion + "\">" +
+      "<crs:params>" +
+      "<crs:alias value=\"" + repository + "\"/>" +
+      "<crs:rootID value=\"" + TEMPLATE_ROOT_ID + "\"/>" +
+      "<crs:adminName value=\"" + user + "\"/>" +
+      "<crs:adminPassword value=\"" + hash + "\"/>" +
+      "<crs:code value=\"\"/>" +
+      "<crs:features/>" +
+      "<crs:snapshots>" +
+      "<crs:data>" + template + "</crs:data>" +
+      "</crs:snapshots>" +
+      "<crs:hashedVersionID value=\"false\"/>" +
+      "</crs:params>" +
+      "</crs:call>";
+  }
 
   public String depotInfo(String repository, String platformVersion, String user, String passwordHash) {
     return "<?xml version=\"1.0\" encoding=\"UTF-8\"?> " +
@@ -74,5 +97,11 @@ public class RequestBodyHelper {
       "<crs:removed value=\"true\"/>" +
       "</crs:params>" +
       "</crs:call>";
+  }
+
+  private String getTemplateCreateDepot() {
+    var inputStream = RequestBodyHelper.class.getResourceAsStream("/createDepot.txt");
+    var reader = new InputStreamReader(inputStream);
+    return new BufferedReader(reader).lines().parallel().collect(Collectors.joining("\n"));
   }
 }
