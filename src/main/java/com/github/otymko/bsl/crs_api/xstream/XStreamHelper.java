@@ -1,0 +1,47 @@
+/*
+ * This file is a part of CRS-API for java.
+ *
+ * Copyright © 2021
+ * Tymko Oleg <olegtymko@yandex.ru> and contributors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.github.otymko.bsl.crs_api.xstream;
+
+import com.thoughtworks.xstream.XStream;
+import lombok.Getter;
+import lombok.experimental.UtilityClass;
+
+/**
+ * Утилитный класс для упрощения чтения xml с помощью {@link XStream}
+ */
+@UtilityClass
+public class XStreamHelper {
+  @Getter(lazy = true)
+  private final XStream xStream = createXStream();
+
+  /**
+   * Прочитать объект их xml-строки
+   *
+   * @param data xml-строка
+   * @return произвольный объект
+   */
+  public Object readFromString(String data) {
+    return getXStream().fromXML(data);
+  }
+
+  private XStream createXStream() {
+    return new ResponseXStream();
+  }
+
+}
