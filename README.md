@@ -47,7 +47,7 @@ String user = "Администратор";
 String password = "1";
 try {
   RepositoryManager.createDepot(url, repositoryName, platformVersion, user, password);
-} catch () {
+} catch (RepositoryClientException exception) {
   // что-то пошло не так
 }
 ```
