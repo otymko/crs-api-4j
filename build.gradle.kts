@@ -1,7 +1,9 @@
 plugins {
     java
+    jacoco
     id("io.franzbecker.gradle-lombok") version "4.0.0"
     id("com.github.hierynomus.license") version "0.15.0"
+    id("org.sonarqube") version "3.1.1"
 }
 
 group = "com.github.otymko.bsl"
@@ -38,6 +40,20 @@ tasks.test {
     testLogging {
         events("passed", "skipped", "failed")
     }
+    reports {
+        html.isEnabled = true
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.isEnabled = true
+        xml.destination = File("$buildDir/reports/jacoco/test/jacoco.xml")
+    }
 }
 
 lombok {
@@ -52,4 +68,16 @@ license {
     strictCheck = true
     mapping("java", "SLASHSTAR_STYLE")
     exclude("**/*.txt")
+}
+
+sonarqube {
+    properties {
+        property("sonar.projectKey", "otymko_crs-api-4j")
+        property("sonar.projectName", "CRS API for Java")
+        property("sonar.organization", "otymko")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sourceEncoding", "UTF-8")
+        property("sonar.exclusions", "**/gen/**/*.*")
+        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacoco.xml")
+    }
 }
