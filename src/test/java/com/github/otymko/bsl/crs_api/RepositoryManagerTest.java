@@ -29,16 +29,42 @@ class RepositoryManagerTest {
   private static final String PLATFORM_VERSION = "8.3.12.1855";
 
   @Test
-  void testCreateDepot() {
+  void testCreateRepository() {
     var repositoryName = "repo" + UUID.randomUUID().toString();
     boolean success;
     try {
-      RepositoryManager.createDepot(URL, repositoryName, PLATFORM_VERSION, "Администратор", "1");
+      RepositoryManager.createRepository(URL, repositoryName, PLATFORM_VERSION, "Администратор", "1");
       success = true;
     } catch (RepositoryClientException exception) {
       success = false;
     }
     assertThat(success).isTrue();
   }
+
+  @Test
+  void testRepositoryExist() {
+    var repositoryName = "maincr";
+    var repositoryExist = RepositoryManager.repositoryExist(URL, repositoryName, PLATFORM_VERSION);
+
+    assertThat(repositoryExist).isTrue();
+
+    repositoryName = "maincr2";
+    repositoryExist = RepositoryManager.repositoryExist(URL, repositoryName, PLATFORM_VERSION);
+
+    assertThat(repositoryExist).isFalse();
+  }
+
+  @Test
+  void testGetPlatformVersion() {
+    String platformVersion;
+    try {
+      platformVersion = RepositoryManager.getPlatformVersion(URL);
+    } catch (RepositoryClientException exception) {
+      platformVersion = "";
+    }
+
+    assertThat(platformVersion).hasToString("8.3.12.1855");
+  }
+
 
 }

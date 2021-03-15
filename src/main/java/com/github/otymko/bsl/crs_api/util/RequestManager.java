@@ -35,7 +35,7 @@ public class RequestManager {
   private final MediaType XML_MEDIA_TYPE = MediaType.get("application/xml; charset=utf-8");
 
   /**
-   * Получить обработанный ответ сервера хранилищ
+   * Получить обработанный ответ сервера
    *
    * @param url адрес сервера хранилищ
    * @param xml xml сообщение
@@ -43,10 +43,7 @@ public class RequestManager {
    * @throws RepositoryClientException сервер хранилищ вернул обработанную ошибку
    */
   public Object getRequestResult(String url, String xml) throws RepositoryClientException {
-    var client = new OkHttpClient();
-    var request = RequestManager.createRequest(url, xml);
-    var responseBody = RequestManager.getResponseBody(client, request);
-    var result = XStreamHelper.readFromString(responseBody);
+    var result = getRequestResultWithSupportCallException(url, xml);
     if (result instanceof CallExceptionResponse) {
       var callException = (CallExceptionResponse) result;
       var message = ErrorMessageConvertor.decodeMessage(callException.getMessage());
@@ -56,7 +53,22 @@ public class RequestManager {
   }
 
   /**
-   * Создать новый http запрос к серверу хранилищ
+   * Получить обработанный ответ сервера с поддержкой CallException
+   *
+   * @param url адрес сервера хранилищ
+   * @param xml xml сообщение
+   * @return десериализованный ответ сервера хранилищ
+   * @throws RepositoryClientException сервер хранилищ вернул обработанную ошибку
+   */
+  public Object getRequestResultWithSupportCallException(String url, String xml) throws RepositoryClientException {
+    var client = new OkHttpClient();
+    var request = RequestManager.createRequest(url, xml);
+    var responseBody = RequestManager.getResponseBody(client, request);
+    return XStreamHelper.readFromString(responseBody);
+  }
+
+  /**
+   * Создать новый http запрос к серверу
    *
    * @param url  адрес сервера хранилищ
    * @param data xml сообщение

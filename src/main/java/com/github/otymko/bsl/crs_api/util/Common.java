@@ -23,11 +23,15 @@ import com.github.otymko.bsl.crs_api.format.CRSValue;
 import com.github.otymko.bsl.crs_api.format.User;
 import lombok.experimental.UtilityClass;
 
+import java.util.regex.Pattern;
+
 /**
  * Утилитный класс общего назначения
  */
 @UtilityClass
 public class Common {
+  private static final Pattern SEARCH_PLATFORM =
+    Pattern.compile("[1-9]\\.\\d\\.\\d{1,3}\\.\\d{1,5}", Pattern.MULTILINE);
 
   /**
    * Создать пользователя хранилища по данным из CRSValue
@@ -54,6 +58,20 @@ public class Common {
     repositoryUser.setOnline(info.isOnline());
     repositoryUser.setRemoved(info.isRemoved());
     return repositoryUser;
+  }
+
+  /**
+   * Получить из текста ошибки версию платформы 1С
+   *
+   * @param message текст ошибки
+   * @return версия платформы 1С
+   */
+  public String getPlatformVersionFromErrorMessage(String message) {
+    var matcher = SEARCH_PLATFORM.matcher(message);
+    if (matcher.find()) {
+      return matcher.group(0);
+    }
+    return "";
   }
 
 }
