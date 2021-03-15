@@ -41,7 +41,7 @@ public class RepositoryManager {
    * @param password        пароль пользователя
    * @throws RepositoryClientException
    */
-  public static void createDepot(String url, String repository, String platformVersion, String user,
+  public static void createRepository(String url, String repository, String platformVersion, String user,
                                  String password) throws RepositoryClientException {
     var passwordHash = HashingPassword.hash(password);
     var xml = RequestBodyHelper.createDevDepot(repository, platformVersion, user, passwordHash,

@@ -35,7 +35,7 @@ class RepositoryClientTest {
   @BeforeAll
   public static void setup() {
     try {
-      RepositoryManager.createDepot(URL, RepositoryClient.DEFAULT_REPOSITORY_NAME, PLATFORM_VERSION, REPO_USER,
+      RepositoryManager.createRepository(URL, RepositoryClient.DEFAULT_REPOSITORY_NAME, PLATFORM_VERSION, REPO_USER,
         REPO_PASSWORD);
     } catch (RepositoryClientException exception) {
       // игнорируем. пока нет возможности проверить существование репозитория
