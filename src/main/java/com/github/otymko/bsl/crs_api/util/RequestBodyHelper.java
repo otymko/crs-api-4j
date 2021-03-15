@@ -104,4 +104,14 @@ public class RequestBodyHelper {
     var reader = new InputStreamReader(inputStream);
     return new BufferedReader(reader).lines().parallel().collect(Collectors.joining("\n"));
   }
+
+  public String openDevDepot(String repository, String platformVersion) {
+    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+      "<crs:call xmlns:crs=\"http://v8.1c.ru/8.2/crs\" alias=\"" + repository + "\" name=\"DevDepotAdmin_openDevDepot\" version=\"" + platformVersion + "\">" +
+      "<crs:params>" +
+      "<crs:alias value=\"" + repository + "\"/>" +
+      "<crs:convert value=\"false\"/>" +
+      "</crs:params>" +
+      "</crs:call>";
+  }
 }

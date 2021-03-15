@@ -41,4 +41,30 @@ class RepositoryManagerTest {
     assertThat(success).isTrue();
   }
 
+  @Test
+  void testRepositoryExist() {
+    var repositoryName = "maincr";
+    var repositoryExist = RepositoryManager.repositoryExist(URL, repositoryName, PLATFORM_VERSION);
+
+    assertThat(repositoryExist).isTrue();
+
+    repositoryName = "maincr2";
+    repositoryExist = RepositoryManager.repositoryExist(URL, repositoryName, PLATFORM_VERSION);
+
+    assertThat(repositoryExist).isFalse();
+  }
+
+  @Test
+  void testGetPlatformVersion() {
+    String platformVersion;
+    try {
+      platformVersion = RepositoryManager.getPlatformVersion(URL);
+    } catch (RepositoryClientException exception) {
+      platformVersion = "";
+    }
+
+    assertThat(platformVersion).hasToString("8.3.12.1855");
+  }
+
+
 }
