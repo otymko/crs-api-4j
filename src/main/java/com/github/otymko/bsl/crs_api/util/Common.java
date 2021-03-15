@@ -19,6 +19,7 @@
 package com.github.otymko.bsl.crs_api.util;
 
 import com.github.otymko.bsl.crs_api.RepositoryUser;
+import com.github.otymko.bsl.crs_api.UserRole;
 import com.github.otymko.bsl.crs_api.format.CRSValue;
 import com.github.otymko.bsl.crs_api.format.User;
 import lombok.experimental.UtilityClass;
@@ -54,7 +55,7 @@ public class Common {
     repositoryUser.setId(info.getInfo().getId());
     repositoryUser.setName(info.getInfo().getName());
     repositoryUser.setPasswordHash(info.getInfo().getPassword());
-    repositoryUser.setRole(info.getInfo().getRights());
+    repositoryUser.setRole(UserRole.fromValue(info.getInfo().getRights()));
     repositoryUser.setOnline(info.isOnline());
     repositoryUser.setRemoved(info.isRemoved());
     return repositoryUser;

@@ -83,7 +83,7 @@ class RepositoryClientTest {
     // give
     var user = "user_" + UUID.randomUUID().toString();
     var userPassword = "1";
-    var role = "1";
+    var role = UserRole.DEVELOPER;
 
     // when
     var client = getClient();

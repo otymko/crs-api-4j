@@ -39,7 +39,7 @@ class RepositoryUserTest {
     assertThat(repositoryUser.getId()).hasToString("f02fb7e4-8477-11eb-c986-0242ac150002");
     assertThat(repositoryUser.getName()).hasToString("Администратор");
     assertThat(repositoryUser.getPasswordHash()).hasToString("06d49632c9dc9bcb62aeaef99612ba6b");
-    assertThat(repositoryUser.getRole()).hasToString("65535");
+    assertThat(repositoryUser.getRole().value()).hasToString("65535");
   }
 
 }

@@ -107,10 +107,11 @@ public class RepositoryClient {
    * @param role         роль пользователя
    * @throws RepositoryClientException
    */
-  public void createUser(String userName, String userPassword, String role) throws RepositoryClientException {
+  public void createUser(String userName, String userPassword, UserRole role) throws RepositoryClientException {
     checkConnection();
     var hash = HashingPassword.hash(userPassword);
-    var xml = RequestBodyHelper.addUser(repository, platformVersion, user, passwordHash, userName, hash, role);
+    var xml = RequestBodyHelper.addUser(repository, platformVersion, user, passwordHash, userName, hash,
+      role.value());
     RequestManager.getRequestResult(url, xml);
   }
 

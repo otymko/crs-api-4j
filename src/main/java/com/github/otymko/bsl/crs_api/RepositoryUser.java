@@ -40,7 +40,7 @@ public class RepositoryUser {
   /**
    * Роль (права пользователя)
    */
-  private String role;
+  private UserRole role;
   /**
    * Признак активности (пользователь подключен к хранилищу)
    */
