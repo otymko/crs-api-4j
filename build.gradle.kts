@@ -1,5 +1,6 @@
 plugins {
     java
+    `maven-publish`
     jacoco
     id("io.franzbecker.gradle-lombok") version "4.0.0"
     id("com.github.hierynomus.license") version "0.15.0"
@@ -11,6 +12,11 @@ version = "0.1.0"
 
 repositories {
     mavenCentral()
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
 }
 
 dependencies {
@@ -33,6 +39,10 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.assertj", "assertj-core", "3.19.0")
+}
+
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
 }
 
 tasks.test {
@@ -79,5 +89,13 @@ sonarqube {
         property("sonar.sourceEncoding", "UTF-8")
         property("sonar.exclusions", "**/gen/**/*.*")
         property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacoco.xml")
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
     }
 }
