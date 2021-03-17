@@ -159,6 +159,32 @@ class RepositoryClientTest {
 
   }
 
+  @Test
+  void testRemoveUser() throws RepositoryClientException {
+    var user = "user_" + UUID.randomUUID().toString();
+    var userPassword = "1";
+    var role = UserRole.DEVELOPER;
+
+    var client = getClient();
+    client.connect(REPO_USER, REPO_PASSWORD);
+    client.createUser(user, userPassword, role);
+    var repositoryUsers = client.getUsers();
+    var repositoryUser = repositoryUsers.stream()
+      .filter(currentUser -> currentUser.getName().equals(user) && !currentUser.isRemoved())
+      .findAny();
+
+    assertThat(repositoryUser).isPresent();
+
+    client.removeUser(repositoryUser.get().getId());
+
+    repositoryUsers = client.getUsers();
+    repositoryUser = repositoryUsers.stream()
+      .filter(currentUser -> currentUser.getName().equals(user) && currentUser.isRemoved())
+      .findAny();
+
+    assertThat(repositoryUser).isPresent();
+  }
+
   private boolean isConnectionEstablished(RepositoryClient client, String password) {
     boolean connectionEstablished;
     try {
