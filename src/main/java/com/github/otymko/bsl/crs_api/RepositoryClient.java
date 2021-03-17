@@ -131,6 +131,32 @@ public class RepositoryClient {
   }
 
   /**
+   * Деактивировать пользователя хранилища. Для получения идентификатора пользователя, нужно
+   * использовать метод {@link #getUser}.
+   *
+   * @param userId идентификатор пользователя. Например, "b9dd0f2c-5ed0-484a-fg12-56494aa67301".
+   * @throws RepositoryClientException обработанная ошибка по взаимодействию с сервером
+   */
+  public void removeUser(String userId) throws RepositoryClientException {
+    checkConnection();
+    var xml = RequestBodyHelper.removeUser(repository, platformVersion, user, passwordHash, userId);
+    RequestManager.getRequestResult(url, xml);
+  }
+
+  /**
+   * Восстановить пользователя хранилища. Для получения идентификатора пользователя, нужно
+   * использовать метод {@link #getUser}.
+   *
+   * @param userId идентификатор пользователя. Например, "b9dd0f2c-5ed0-484a-fg12-56494aa67301".
+   * @throws RepositoryClientException обработанная ошибка по взаимодействию с сервером
+   */
+  public void resurrectUser(String userId) throws RepositoryClientException {
+    checkConnection();
+    var xml = RequestBodyHelper.resurrectUser(repository, platformVersion, user, passwordHash, userId);
+    RequestManager.getRequestResult(url, xml);
+  }
+
+  /**
    * Получить список пользователей хранилища
    *
    * @return список пользователей хранилища
