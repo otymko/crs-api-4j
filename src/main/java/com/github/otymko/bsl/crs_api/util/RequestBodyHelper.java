@@ -98,6 +98,17 @@ public class RequestBodyHelper {
       "</crs:call>";
   }
 
+  public String resurrectUser(String repository, String platformVersion, String user, String passwordHash, String userId) {
+    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+      "<crs:call xmlns:crs=\"http://v8.1c.ru/8.2/crs\" alias=\"" + repository + "\" name=\"UserManager_resurrectUser\" version=\"" + platformVersion + "\">" +
+      "<crs:auth user=\"" + user + "\" password=\"" + passwordHash + "\" />" +
+      "<crs:bind bindID=\"" + UUID.randomUUID().toString() + "\"/>" +
+      "<crs:params>" +
+      "<crs:id value=\"" + userId + "\"/>" +
+      "</crs:params>\n" +
+      "</crs:call>";
+  }
+
   public String devObjectsStatistic(String repository, String platformVersion, String user, String passwordHash) {
     return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
       "<crs:call xmlns:crs=\"http://v8.1c.ru/8.2/crs\" alias=\"" + repository + "\" name=\"DevDepot_devObjectsStatistic\" version=\"" + platformVersion + "\">" +

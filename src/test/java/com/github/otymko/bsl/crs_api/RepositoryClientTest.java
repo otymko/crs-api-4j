@@ -161,28 +161,40 @@ class RepositoryClientTest {
 
   @Test
   void testRemoveUser() throws RepositoryClientException {
-    var user = "user_" + UUID.randomUUID().toString();
+    var userName = "user_" + UUID.randomUUID().toString();
     var userPassword = "1";
-    var role = UserRole.DEVELOPER;
 
     var client = getClient();
     client.connect(REPO_USER, REPO_PASSWORD);
-    client.createUser(user, userPassword, role);
-    var repositoryUsers = client.getUsers();
-    var repositoryUser = repositoryUsers.stream()
-      .filter(currentUser -> currentUser.getName().equals(user) && !currentUser.isRemoved())
-      .findAny();
+    client.createUser(userName, userPassword, UserRole.DEVELOPER);
+    var repositoryUser = getUserByName(client, userName, false);
 
-    assertThat(repositoryUser).isPresent();
+    client.removeUser(repositoryUser.getId());
 
-    client.removeUser(repositoryUser.get().getId());
+    repositoryUser = getUserByName(client, userName, true);
+    // для наглядности
+    assertThat(repositoryUser.getName()).hasToString(userName);
+    assertThat(repositoryUser.isRemoved()).isTrue();
+  }
 
-    repositoryUsers = client.getUsers();
-    repositoryUser = repositoryUsers.stream()
-      .filter(currentUser -> currentUser.getName().equals(user) && currentUser.isRemoved())
-      .findAny();
+  @Test
+  void testResurrectUser() throws RepositoryClientException {
+    var userName = "user_" + UUID.randomUUID().toString();
+    var userPassword = "1";
 
-    assertThat(repositoryUser).isPresent();
+    var client = getClient();
+    client.connect(REPO_USER, REPO_PASSWORD);
+    client.createUser(userName, userPassword, UserRole.DEVELOPER);
+
+    var repositoryUser = getUserByName(client, userName, false);
+    client.removeUser(repositoryUser.getId());
+    repositoryUser = getUserByName(client, userName, true);
+
+    client.resurrectUser(repositoryUser.getId());
+    repositoryUser = getUserByName(client, userName, false);
+    // для наглядности
+    assertThat(repositoryUser.getName()).hasToString(userName);
+    assertThat(repositoryUser.isRemoved()).isFalse();
   }
 
   private boolean isConnectionEstablished(RepositoryClient client, String password) {
@@ -204,4 +216,13 @@ class RepositoryClientTest {
     return getClient(URL);
   }
 
+  private RepositoryUser getUserByName(RepositoryClient client, String userName,
+                                       boolean isRemoved) throws RepositoryClientException {
+    var repositoryUsers = client.getUsers();
+    var optionalRepositoryUser = repositoryUsers.stream()
+      .filter(currentUser -> currentUser.getName().equals(userName) && currentUser.isRemoved() == isRemoved)
+      .findAny();
+    assertThat(optionalRepositoryUser).isPresent();
+    return optionalRepositoryUser.get();
+  }
 }
